@@ -1,0 +1,9 @@
+# https://docs.netlify.com/routing/redirects/#syntax-for-the-netlify-configuration-file
+[[redirects]]
+  from = "/ping"
+  to = "/ping"
+
+[[redirects]]
+  from = "/test"
+  to = "/test"
+  
