@@ -63,7 +63,8 @@ export default {
         //alert(JSON.stringify(this.form))
         const listOfChecked = this.form.checked.toString()
         //alert(this.form.subject)
-        const path = 'http://localhost:5000/envia_email'
+        //const path = 'http://localhost:5000/envia_email'
+        const path = 'https://felipecps.pythonanywhere.com/envia_email'
         axios.post(
             path, 
             null, 
