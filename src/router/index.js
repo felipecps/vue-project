@@ -4,6 +4,7 @@ import Ping from '../components/Ping.vue';
 import Books from '../components/Books.vue';
 import Test from '../components/Test.vue';
 import EmailAlert from '../components/EmailAlert.vue';
+import CalculaCorretagem from '../components/CalculaCorretagem.vue';
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/test',
     name: 'Test',
     component: Test,
+  },
+  {
+    path: '/calculacorretagem',
+    name: 'CalculaCorretagem',
+    component: CalculaCorretagem,
   },
 ];
 
