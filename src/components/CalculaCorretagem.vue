@@ -30,6 +30,16 @@
                 </div>
             </b-form-group>
             <br>
+
+
+            <b-alert :show="dismissCountDown"
+                     dismissible
+                     fade
+                     variant="warning"
+                     @dismiss-count-down="countDownChanged">
+                Você precisa preencher todos os campos antes de adicionar!!
+            </b-alert>
+
             <div>
                 <b-table striped hover :items="items" :fields="fields"></b-table>
             </div>
@@ -44,6 +54,9 @@
         name: 'CalculaCorretagem',
         data() {
             return {
+                dismissSecs: 5,
+                dismissCountDown: 0,
+                showDismissibleAlert: false,
                 acao: '',
                 quantidade: '',
                 preco: '',
@@ -59,8 +72,19 @@
             };
         },
         methods: {
+            showAlert() {
+                this.dismissCountDown = this.dismissSecs
+            },
+            countDownChanged(dismissCountDown) {
+                this.dismissCountDown = dismissCountDown
+            },
             addToTable() {
-                this.items.push({ Acao: this.acao, Quantidade: this.quantidade, Preco: this.preco, Tipo_da_Operacao: this.selected })
+                if (this.acao != '' && this.quantidade != '' && this.preco != '' && this.selected != null) {
+                    this.items.push({ Acao: this.acao, Quantidade: this.quantidade, Preco: this.preco, Tipo_da_Operacao: this.selected })
+                }
+                else {
+                    this.showAlert()
+                }
             },
             resetAllFields() {
                 this.acao = ''
