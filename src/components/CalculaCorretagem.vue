@@ -58,11 +58,12 @@
                 dismissCountDown: 0,
                 showDismissibleAlert: false,
                 acao: '',
+                valor_reais: '',
                 quantidade: '',
                 preco: '',
                 tipo_de_operacao: '',
                 selected: null,
-                fields: ['Acao', 'Quantidade', 'Preco', 'Tipo_da_Operacao'],
+                fields: ['Acao', 'Quantidade', 'Preco', 'Tipo_da_Operacao', 'Valor'],
                 options: [
                     { value: null, text: 'Escolha...' },
                     { value: 'Compra', text: 'Compra' },
@@ -75,12 +76,19 @@
             showAlert() {
                 this.dismissCountDown = this.dismissSecs
             },
+            converter(valor) {
+                var numero = parseFloat(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                return numero
+            },
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
             addToTable() {
                 if (this.acao != '' && this.quantidade != '' && this.preco != '' && this.selected != null) {
-                    this.items.push({ Acao: this.acao, Quantidade: this.quantidade, Preco: this.preco, Tipo_da_Operacao: this.selected })
+                    this.preco_editado = this.preco.replace(/,/g, '.')
+                    let temp = this.quantidade * this.preco_editado
+                    this.valor_reais = this.converter(temp)
+                    this.items.push({ Acao: this.acao, Quantidade: this.quantidade, Preco: this.preco, Tipo_da_Operacao: this.selected, Valor:this.valor_reais })
                 }
                 else {
                     this.showAlert()
