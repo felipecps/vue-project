@@ -64,6 +64,7 @@
                 form: {
                     acao: '',
                     quantidade: '',
+                    precoDaCorretagem: 0,
                     valor_sem_formatacao: 0,
                     tipo_de_operacao: '',
                     selected_compra_venda: null,
@@ -97,15 +98,18 @@
             },
             atualizaItems(tabela_temp_para_atualizacao, valor_nota) {
                 var soma_de_valores = 0
+                var soma_das_corretagens = 0
                 for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
                     soma_de_valores += tabela_temp_para_atualizacao[i].ValorSemFormatacao
+                    soma_das_corretagens += tabela_temp_para_atualizacao[i].Corretagem
                 }
-                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores
+                                
+                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores - soma_das_corretagens
 
                 for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
                     var p = (tabela_temp_para_atualizacao[i].ValorSemFormatacao / soma_de_valores) * 100
                     tabela_temp_para_atualizacao[i].Peso = p.toFixed(2)
-                    tabela_temp_para_atualizacao[i].Taxas = tabela_temp_para_atualizacao[i].Peso * taxas / 100
+                    tabela_temp_para_atualizacao[i].Taxas = (tabela_temp_para_atualizacao[i].Peso * taxas / 100) + tabela_temp_para_atualizacao[i].Corretagem
                     tabela_temp_para_atualizacao[i].Total = tabela_temp_para_atualizacao[i].ValorSemFormatacao + tabela_temp_para_atualizacao[i].Taxas
                 }
 
@@ -118,16 +122,25 @@
                 return tabela_temp_para_atualizacao
             },
             addToTable() {
-                if (this.form.acao != '' && this.form.quantidade != '' && this.form.preco != '' && this.form.selected_compra_venda != null) {
+                if (this.form.acao != '' && this.form.quantidade != '' && this.form.preco != '' && this.form.selected_compra_venda != null && this.valor_nota != '') {
 
                     this.preco_editado = this.form.preco.replace(/,/g, '.')
                     let preco_da_compra = this.form.quantidade * this.preco_editado
+                    let precoDaCorretagem = 0
+                    if (this.form.quantidade % 100 == 0) {
+                        this.form.precoDaCorretagem = 4.99
+                    } else {
+                        this.form.precoDaCorretagem = 2.49
+                    }
+
+
 
                     this.tabela_temp.push({
                         Ação: this.form.acao,
                         Tipo: this.form.selected_compra_venda,
                         ValorSemFormatacao: preco_da_compra,
                         Valor: this.converter(preco_da_compra),
+                        Corretagem: this.form.precoDaCorretagem,
                         Peso: null,
                         Taxas: null,
                         Total: null,
