@@ -6,7 +6,9 @@
                 <b-form-input id="input-valor"
                               v-model="valor_nota"
                               placeholder="Qual é o valor da nota?"
-                              required></b-form-input>
+                              required
+                              autocomplete="off"
+                              ></b-form-input>
             </b-card>
         </div>
 
