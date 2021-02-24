@@ -18,10 +18,6 @@
             </b-card>
         </div>
 
-
-
-
-
         <div>
             <b-card class="mt-3" bg-variant="light" text-variant="black">
                 <b-form>
@@ -53,6 +49,7 @@
         <b-alert :show="dismissCountDown"
                  dismissible
                  fade
+                 class="mt-3"
                  variant="warning"
                  @dismiss-count-down="countDownChanged">
             Você precisa preencher todos os campos antes de adicionar!!
@@ -74,10 +71,13 @@
                 form: {
                     acao: '',
                     quantidade: '',
+                    valor_sem_formatacao: 0,
                     tipo_de_operacao: '',
                     selected_compra_venda: null,
                     preco: '',
                 },
+                soma_total_dos_itens_declarados: 0,
+                valor_nota: '',
                 corretora: '',
                 options_corretora: [
                     { value: 'xp', text: 'XP' },
@@ -86,14 +86,14 @@
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 showDismissibleAlert: false,
-                valor_reais: '',
-                fields: ['Ação', 'Quantidade', 'Preco', 'Tipo_da_Operacao', 'Taxa de Liquidação', 'Valor'],
+                fields: ['Ação', 'Tipo', 'Valor', 'Peso', 'Taxas', 'Total'],
                 options: [
                     { value: null, text: 'Escolha...' },
                     { value: 'Compra', text: 'Compra' },
                     { value: 'Venda', text: 'Venda' }
                 ],
-                items: []
+                items: [],
+                pesos: []
             };
         },
         methods: {
@@ -107,12 +107,53 @@
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
+            atualiza_peso_dos_items(pesos, valor_nota) {
+                var soma_de_valores = 0
+                for (var i = 0; i < pesos.length; i++) {
+                    soma_de_valores += pesos[i].ValorSemFormatacao
+                }
+
+                console.log(soma_de_valores)
+
+                for (var i = 0; i < pesos.length; i++) {
+                    var p = (pesos[i].ValorSemFormatacao / soma_de_valores) * 100
+                    pesos[i].Peso = p.toFixed(2)
+                }
+
+                var taxas = valor_nota - soma_de_valores
+
+                for (var i = 0; i < pesos.length; i++) {
+                    pesos[i].Taxas = pesos[i].Peso * taxas / 100
+                }
+
+                for (var i = 0; i < pesos.length; i++) {
+                    pesos[i].Total = pesos[i].ValorSemFormatacao + pesos[i].Taxas
+                }
+
+
+                for (var i = 0; i < pesos.length; i++) {
+                    pesos[i].Taxas = this.converter(pesos[i].Taxas)
+                    pesos[i].Total = this.converter(pesos[i].Total)
+                }
+
+                return pesos
+            },
             addToTable() {
                 if (this.form.acao != '' && this.form.quantidade != '' && this.form.preco != '' && this.form.selected_compra_venda != null) {
+
                     this.preco_editado = this.form.preco.replace(/,/g, '.')
-                    let temp = this.form.quantidade * this.preco_editado
-                    this.valor_reais = this.converter(temp)
-                    this.items.push({ Ação: this.form.acao, Quantidade: this.form.quantidade, Preco: this.form.preco, Tipo_da_Operacao: this.form.selected_compra_venda, Valor:this.valor_reais })
+                    let preco_da_compra = this.form.quantidade * this.preco_editado
+
+                    this.pesos.push({
+                        Ação: this.form.acao,
+                        Tipo: this.form.selected_compra_venda,
+                        ValorSemFormatacao: preco_da_compra,
+                        Valor: this.converter(preco_da_compra),
+                        Peso: null,
+                        Taxas: null,
+                        Total: null,
+                    })
+                    this.items = this.atualiza_peso_dos_items(this.pesos, this.valor_nota)
                 }
                 else {
                     this.showAlert()
