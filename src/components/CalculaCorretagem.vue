@@ -7,14 +7,6 @@
                               v-model="valor_nota"
                               placeholder="Qual é o valor da nota?"
                               required></b-form-input>
-
-                <b-form-group class="mt-3" label="Corretora:" v-slot="{ ariaDescribedby }">
-                    <b-form-radio-group id="radio-group-1"
-                                        v-model="corretora"
-                                        :options="options_corretora"
-                                        :aria-describedby="ariaDescribedby"
-                                        name="radio-options"></b-form-radio-group>
-                </b-form-group>
             </b-card>
         </div>
 
@@ -56,7 +48,7 @@
         </b-alert>
 
         <div>
-            <b-table striped hover :items="items" :fields="fields"></b-table>
+            <b-table striped hover :items="items_da_tabela" :fields="fields"></b-table>
         </div>
     </div>
 </template>
@@ -78,11 +70,6 @@
                 },
                 soma_total_dos_itens_declarados: 0,
                 valor_nota: '',
-                corretora: '',
-                options_corretora: [
-                    { value: 'xp', text: 'XP' },
-                    { value: 'easynvest', text: 'Easynvest' }
-                ],
                 dismissSecs: 5,
                 dismissCountDown: 0,
                 showDismissibleAlert: false,
@@ -92,8 +79,8 @@
                     { value: 'Compra', text: 'Compra' },
                     { value: 'Venda', text: 'Venda' }
                 ],
-                items: [],
-                pesos: []
+                items_da_tabela: [],
+                tabela_temp: []
             };
         },
         methods: {
@@ -107,27 +94,27 @@
             countDownChanged(dismissCountDown) {
                 this.dismissCountDown = dismissCountDown
             },
-            atualiza_peso_dos_items(pesos, valor_nota) {
+            atualizaItems(tabela_temp_para_atualizacao, valor_nota) {
                 var soma_de_valores = 0
-                for (var i = 0; i < pesos.length; i++) {
-                    soma_de_valores += pesos[i].ValorSemFormatacao
+                for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
+                    soma_de_valores += tabela_temp_para_atualizacao[i].ValorSemFormatacao
                 }
                 var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores
 
-                for (var i = 0; i < pesos.length; i++) {
-                    var p = (pesos[i].ValorSemFormatacao / soma_de_valores) * 100
-                    pesos[i].Peso = p.toFixed(2)
-                    pesos[i].Taxas = pesos[i].Peso * taxas / 100
-                    pesos[i].Total = pesos[i].ValorSemFormatacao + pesos[i].Taxas
+                for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
+                    var p = (tabela_temp_para_atualizacao[i].ValorSemFormatacao / soma_de_valores) * 100
+                    tabela_temp_para_atualizacao[i].Peso = p.toFixed(2)
+                    tabela_temp_para_atualizacao[i].Taxas = tabela_temp_para_atualizacao[i].Peso * taxas / 100
+                    tabela_temp_para_atualizacao[i].Total = tabela_temp_para_atualizacao[i].ValorSemFormatacao + tabela_temp_para_atualizacao[i].Taxas
                 }
 
                 // Conversão para o formato R$                    
-                for (var i = 0; i < pesos.length; i++) {
-                    pesos[i].Taxas = this.converter(pesos[i].Taxas)
-                    pesos[i].Total = this.converter(pesos[i].Total)
+                for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
+                    tabela_temp_para_atualizacao[i].Taxas = this.converter(tabela_temp_para_atualizacao[i].Taxas)
+                    tabela_temp_para_atualizacao[i].Total = this.converter(tabela_temp_para_atualizacao[i].Total)
                 }
 
-                return pesos
+                return tabela_temp_para_atualizacao
             },
             addToTable() {
                 if (this.form.acao != '' && this.form.quantidade != '' && this.form.preco != '' && this.form.selected_compra_venda != null) {
@@ -135,7 +122,7 @@
                     this.preco_editado = this.form.preco.replace(/,/g, '.')
                     let preco_da_compra = this.form.quantidade * this.preco_editado
 
-                    this.pesos.push({
+                    this.tabela_temp.push({
                         Ação: this.form.acao,
                         Tipo: this.form.selected_compra_venda,
                         ValorSemFormatacao: preco_da_compra,
@@ -144,7 +131,7 @@
                         Taxas: null,
                         Total: null,
                     })
-                    this.items = this.atualiza_peso_dos_items(this.pesos, this.valor_nota)
+                    this.items_da_tabela = this.atualizaItems(this.tabela_temp, this.valor_nota)
                 }
                 else {
                     this.showAlert()
@@ -155,8 +142,7 @@
                 this.form.quantidade = ''
                 this.form.preco = ''
                 this.form.selected_compra_venda = null
-                this.corretora = ''
-                this.option_corretora = null
+                this.valor_nota = ''
             }
         },
         created() {
