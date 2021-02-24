@@ -12,27 +12,28 @@
 
         <div>
             <b-card class="mt-3" bg-variant="light" text-variant="black">
-                <b-form>
+                <b-form autocomplete="off">
                     <label for="input-codigo-da-acao">Ação</label>
                     <b-form-input id="input-codigo-da-acao"
                                   v-model="form.acao"
                                   placeholder="Qual é o código da ação?"
                                   required></b-form-input>
+
+                    <label class="mt-3" for="input-quantidade">Quantidade</label>
+                    <b-form-input id="input-quantidade"
+                                  v-model="form.quantidade"
+                                  placeholder="Quantas ações você comprou ou vendeu?"
+                                  required></b-form-input>
+                    <label class="mt-3" for="input-preco">Preço unitário</label>
+                    <b-form-input id="input-preco"
+                                  v-model="form.preco"
+                                  placeholder="Qual foi o preço unitário?"
+                                  required></b-form-input>
+                    <label class="mt-3" for="inline-form-custom-select-tipo">Compra/Venda</label>
+                    <b-form-select id="inline-form-custom-select-tipo"
+                                   v-model="form.selected_compra_venda"
+                                   :options="options"></b-form-select>
                 </b-form>
-                <label class="mt-3" for="input-quantidade">Quantidade</label>
-                <b-form-input id="input-quantidade"
-                              v-model="form.quantidade"
-                              placeholder="Quantas ações você comprou ou vendeu?"
-                              required></b-form-input>
-                <label class="mt-3" for="input-preco">Preço unitário</label>
-                <b-form-input id="input-preco"
-                              v-model="form.preco"
-                              placeholder="Qual foi o preço unitário?"
-                              required></b-form-input>
-                <label class="mt-3" for="inline-form-custom-select-tipo">Compra/Venda</label>
-                <b-form-select id="inline-form-custom-select-tipo"
-                               v-model="form.selected_compra_venda"
-                               :options="options"></b-form-select>
                 <b-button class="mt-3" v-on:click="addToTable" variant="primary">Adicionar</b-button>
                 <b-button class="mt-3" v-on:click="resetAllFields" variant="danger">Limpar</b-button>
             </b-card>
