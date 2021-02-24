@@ -112,25 +112,16 @@
                 for (var i = 0; i < pesos.length; i++) {
                     soma_de_valores += pesos[i].ValorSemFormatacao
                 }
-
-                console.log(soma_de_valores)
+                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores
 
                 for (var i = 0; i < pesos.length; i++) {
                     var p = (pesos[i].ValorSemFormatacao / soma_de_valores) * 100
                     pesos[i].Peso = p.toFixed(2)
-                }
-
-                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores
-
-                for (var i = 0; i < pesos.length; i++) {
                     pesos[i].Taxas = pesos[i].Peso * taxas / 100
-                }
-
-                for (var i = 0; i < pesos.length; i++) {
                     pesos[i].Total = pesos[i].ValorSemFormatacao + pesos[i].Taxas
                 }
 
-
+                // Conversão para o formato R$                    
                 for (var i = 0; i < pesos.length; i++) {
                     pesos[i].Taxas = this.converter(pesos[i].Taxas)
                     pesos[i].Total = this.converter(pesos[i].Total)
