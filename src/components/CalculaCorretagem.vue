@@ -120,7 +120,7 @@
                     pesos[i].Peso = p.toFixed(2)
                 }
 
-                var taxas = valor_nota - soma_de_valores
+                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores
 
                 for (var i = 0; i < pesos.length; i++) {
                     pesos[i].Taxas = pesos[i].Peso * taxas / 100
