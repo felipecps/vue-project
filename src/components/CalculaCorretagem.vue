@@ -99,17 +99,26 @@
                 this.dismissCountDown = dismissCountDown
             },
             atualizaItems(tabela_temp_para_atualizacao, valor_nota) {
+                var saldo_das_operacoes = 0
                 var soma_de_valores = 0
                 var soma_das_corretagens = 0
                 for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
-                    soma_de_valores += tabela_temp_para_atualizacao[i].ValorSemFormatacao
+                    saldo_das_operacoes += tabela_temp_para_atualizacao[i].ValorSemFormatacao
+                    if (tabela_temp_para_atualizacao[i].ValorSemFormatacao > 0) {
+                        soma_de_valores += tabela_temp_para_atualizacao[i].ValorSemFormatacao
+                    } else {
+                        soma_de_valores = soma_de_valores + (tabela_temp_para_atualizacao[i].ValorSemFormatacao * -1)
+                    }
                     soma_das_corretagens += tabela_temp_para_atualizacao[i].Corretagem
                 }
                                 
-                var taxas = valor_nota.replace(/,/g, '.') - soma_de_valores - soma_das_corretagens
+                var taxas = valor_nota.replace(/,/g, '.') - saldo_das_operacoes - soma_das_corretagens
 
                 for (var i = 0; i < tabela_temp_para_atualizacao.length; i++) {
                     var p = (tabela_temp_para_atualizacao[i].ValorSemFormatacao / soma_de_valores) * 100
+                    if (p < 0) {
+                        p = p * -1
+                    }
                     tabela_temp_para_atualizacao[i].Peso = p.toFixed(2)
                     tabela_temp_para_atualizacao[i].Taxas = (tabela_temp_para_atualizacao[i].Peso * taxas / 100) + tabela_temp_para_atualizacao[i].Corretagem
                     tabela_temp_para_atualizacao[i].Total = tabela_temp_para_atualizacao[i].ValorSemFormatacao + tabela_temp_para_atualizacao[i].Taxas
@@ -128,6 +137,9 @@
 
                     this.preco_editado = this.form.preco.replace(/,/g, '.')
                     let preco_da_compra = this.form.quantidade * this.preco_editado
+                    if (this.form.selected_compra_venda == 'Venda') {
+                        preco_da_compra = preco_da_compra * -1
+                    }
                     let precoDaCorretagem = 0
                     if (this.form.quantidade % 100 == 0) {
                         this.form.precoDaCorretagem = 4.99
@@ -159,6 +171,8 @@
                 this.form.preco = ''
                 this.form.selected_compra_venda = null
                 this.valor_nota = ''
+                this.items_da_tabela = []
+                this.tabela_temp = []
             }
         },
         created() {
