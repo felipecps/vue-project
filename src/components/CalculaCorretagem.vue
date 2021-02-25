@@ -2,10 +2,10 @@
     <div class="container">
         <div>
             <b-card bg-variant="light" text-variant="black">
-                <label for="input-valor">Valor:</label>
+                <label for="input-valor">Valor da Nota</label>
                 <b-form-input id="input-valor"
                               v-model="valor_nota"
-                              placeholder="Qual é o valor da nota?"
+                              placeholder="Qual é o valor da nota de corretagem?"
                               required
                               autocomplete="off"
                               ></b-form-input>
@@ -36,7 +36,7 @@
                                    v-model="form.selected_compra_venda"
                                    :options="options"></b-form-select>
                 </b-form>
-                <b-button class="mt-3" v-on:click="addToTable" variant="primary">Adicionar</b-button>
+                <b-button class="mt-3 mr-1" v-on:click="addToTable" variant="primary">Adicionar</b-button>
                 <b-button class="mt-3" v-on:click="resetAllFields" variant="danger">Limpar</b-button>
             </b-card>
         </div>
