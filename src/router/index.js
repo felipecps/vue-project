@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Ping from '../components/Ping.vue';
-import Books from '../components/Books.vue';
-import Test from '../components/Test.vue';
+import PaginaInicial from '../components/PaginaInicial.vue';
 import EmailAlert from '../components/EmailAlert.vue';
 import CalculaCorretagem from '../components/CalculaCorretagem.vue';
 
@@ -11,8 +10,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Books',
-    component: Books,
+    name: 'PaginaInicial',
+        component: PaginaInicial,
   },
   {
     path: '/emailalert',
@@ -23,11 +22,6 @@ const routes = [
     path: '/ping',
     name: 'Ping',
     component: Ping,
-  },
-  {
-    path: '/test',
-    name: 'Test',
-    component: Test,
   },
   {
     path: '/calculacorretagem',
